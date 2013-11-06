@@ -15,21 +15,21 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 # we need a zookeeper ... so we jump in to the exercise 10 
 # which comes after the HDFS-HA lab
 #
-CDHV=4.2.0
-EXJARS=hadoop-2.0.0-mr1-cdh4.2.0-examples.jar
-USER=training
-ZKSERVER=elephant
-ZKPORT=2181
+#CDHV=4.2.0
+#EXJARS=hadoop-2.0.0-mr1-cdh4.2.0-examples.jar
+#USER=training
+#ZKSERVER=elephant
+#ZKPORT=2181
 
 
 ##########################
 # Cloudera Quickstart VM #
 ##########################
-#CDHV=4.4.0
-#EXJARS=hadoop-examples-2.0.0-mr1-cdh4.4.0.jar
-#USER=cloudera
-#ZKSERVER=127.0.0.1
-#ZKPORT=2181
+CDHV=4.4.0
+EXJARS=hadoop-examples-2.0.0-mr1-cdh4.4.0.jar
+USER=cloudera
+ZKSERVER=127.0.0.1
+ZKPORT=2181
 
 #
 # Prepare the stage for some more analytics later on ...
@@ -106,7 +106,7 @@ cd giraph-release-1.0.0
 #
 # Download sample data
 #
-mkdir gsampledata
+#mkdir gsampledata
 cd gsampledata
 
 #
@@ -138,22 +138,35 @@ cd ..
 
 #ls
 
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar -h
 
 #
-# Run Giraph tests
+# Run Giraph benchamrks
 #
-hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
+#hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
 
 #
 # Show what algorithms can be used with a given InputFormat
 #
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=127.0.0.1:2181 -libjars giraph-core.jar org.apache.giraph.examples.SimpleShortestPathsVertex -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/cloudera/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/cloudera/goutput/shortestpaths_$NOW -w 1
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar -h
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar -la
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/cloudera/goutput/shortestpaths_rand_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=5 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.AdjacencyListTextVertexOutputFormat -op /user/cloudera/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=1 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.JsonBase64VertexOutputFormat -op /user/$USER/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=1 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
 
-hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.JsonBase64VertexOutputFormat -op /user/$USER/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=1 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleShortestPathsVertex -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/shortestpaths_$NOW -w 1
+
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleOutDegreeCountVertex2 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/outdegree_$NOW -w 1
+
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleInDegreeCountVertex2 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/indegree_$NOW -w 1
+
+
+
+
+#
+# Build better LOGIC for a better EXAMPLE !!!
+#
+
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/cloudera/goutput/SSPV2_rand_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=3 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10000 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.AdjacencyListTextVertexOutputFormat -op /user/cloudera/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=20 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10000 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+
 
 
 
