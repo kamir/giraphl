@@ -25,8 +25,8 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 ##########################
 # Cloudera Quickstart VM #
 ##########################
-CDHV=4.4.0
-EXJARS=hadoop-examples-2.0.0-mr1-cdh4.4.0.jar
+CDHV=4.3.0
+EXJARS=hadoop-examples-2.0.0-mr1-cdh4.3.0.jar
 USER=cloudera
 ZKSERVER=127.0.0.1
 ZKPORT=2181
@@ -34,10 +34,10 @@ ZKPORT=2181
 #
 # Prepare the stage for some more analytics later on ...
 #
-#sudo yum install ant
-#sudo yum install gnuplot
-#sudo yum install svn
-#sudo yum install R
+sudo yum install ant
+sudo yum install gnuplot
+sudo yum install svn
+sudo yum install R
 
 #
 # Install Maven3
@@ -87,18 +87,18 @@ ZKPORT=2181
 #
 # Test the MapReduce cluster …
 #
-#hadoop fs -mkdir /user/$USER
-#hadoop fs -mkdir /user/$USER/ginput
-#hadoop fs -mkdir /user/$USER/goutput
-#hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/teragen 50000 TESTFILE_$NOW
-#hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/terasort TESTFILE_$NOW TESTFILE_$NOW.sorted
+hadoop fs -mkdir /user/$USER
+hadoop fs -mkdir /user/$USER/ginput
+hadoop fs -mkdir /user/$USER/goutput
+hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/teragen 50000 TESTFILE_$NOW
+hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/terasort TESTFILE_$NOW TESTFILE_$NOW.sorted
 
 #
 # Deploy Giraph
 #
 #wget https://github.com/apache/giraph/archive/release-1.0.0.zip
 #unzip release-1.0.0
-cd giraph-release-1.0.0
+#cd giraph-release-1.0.0
 #mvn package -DskipTests -Dhadoop=non_secure -P hadoop_2.0.0
 #ln -s giraph-core/target/giraph-1.0.0-for-hadoop-2.0.0-alpha-jar-with-dependencies.jar giraph-core.jar
 #ln -s giraph-examples/target/giraph-examples-1.0.0-for-hadoop-2.0.0-alpha-jar-with-dependencies.jar giraph-ex.jar
@@ -107,7 +107,7 @@ cd giraph-release-1.0.0
 # Download sample data
 #
 #mkdir gsampledata
-cd gsampledata
+#cd gsampledata
 
 #
 #
