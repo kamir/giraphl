@@ -1,15 +1,18 @@
+####################################################
 #
 #  Bootstrap-giraph in a CDH cluster
 #
 #  author  :  Mirko Kaempf
 #  version :  0.3
 #
+####################################################
 #
-
+# we need some salt for file pseudorandom-file-names
+#
 NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 
-########################
-# Cloudera Training VM #
+####################################################
+# Cloudera Training VM #   mightbe out of date
 ########################
 #
 # we need a zookeeper ... so we jump in to the exercise 10 
@@ -21,7 +24,7 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 #ZKSERVER=elephant
 #ZKPORT=2181
 
-##################################
+####################################################
 # Cloudera Quickstart VM  CDH4.3 #
 ##################################
 #CDHV=4.3.0
@@ -30,8 +33,8 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 #ZKSERVER=127.0.0.1
 #ZKPORT=2181
 
-#############################
-# Cloudera Quickstart VM C5 #
+#####################################################
+# Cloudera Quickstart VM C5 #  current VERSION !!!!!!
 #############################
 CDHV=5.0.0
 USER=cloudera
@@ -42,8 +45,8 @@ JTADDRESS=127.0.0.1
 ZKSERVER=127.0.0.1
 ZKPORT=2181
 
-##########################################################
-#
+############################################################
+# In other environments we might have to install some tools
 # Prepare the stage for some more analytics later on ...
 #
 #sudo yum install ant
@@ -51,7 +54,7 @@ ZKPORT=2181
 #sudo yum install svn
 #sudo yum install R
 
-##########################################################
+###########################################################
 #
 # Install Maven3
 #
@@ -98,16 +101,16 @@ ZKPORT=2181
 #git config --global user.name "contrib"
 #git config --global user.email thats@me.com
 
-##################################################
+####################################################################################
 #
-# Test the MapReduce cluster …
+# Prepare a user directory and test the MapReduce cluster …
 #
-#hadoop fs -mkdir /user/$USER
-#hadoop fs -mkdir /user/$USER/sort
-#hadoop fs -mkdir /user/$USER/ginput
-#hadoop fs -mkdir /user/$USER/goutput
-#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS teragen 50000 sort/TESTFILE_$NOW
-#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS terasort sort/TESTFILE_$NOW sort/TESTFILE_$NOW.sorted
+hadoop fs -mkdir /user/$USER
+hadoop fs -mkdir /user/$USER/sort
+hadoop fs -mkdir /user/$USER/ginput
+hadoop fs -mkdir /user/$USER/goutput
+hadoop jar $HADOOP_MAPRED_HOME/$EXJARS teragen 50000 sort/TESTFILE_$NOW
+hadoop jar $HADOOP_MAPRED_HOME/$EXJARS terasort sort/TESTFILE_$NOW sort/TESTFILE_$NOW.sorted
 
 ##################################################
 #
@@ -135,14 +138,14 @@ cd ..
 cd $GIRAPH_HOME
 #git checkout $GV
 
-rm giraph-core.jar
-rm giraph-ex.jar
+#rm giraph-core.jar
+#rm giraph-ex.jar
 
 #cp /home/cloudera/GIRAPH/giraphl/blog_02/src/*.java ./giraph-examples/src/main/java/org/apache/giraph/examples
 
-mvn clean compile package -DskipTests -Dhadoop=non_secure -P$PRO
-ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
-ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
+#mvn clean compile package -DskipTests -Dhadoop=non_secure -P$PRO
+#ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
+#ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
 
 ##################################################
 #
