@@ -1,8 +1,8 @@
 #
-#  bootstrap-giraph
+#  Bootstrap-giraph in a CDH cluster
 #
 #  author  :  Mirko Kaempf
-#  version :  0.1
+#  version :  0.3
 #
 #
 
@@ -21,24 +21,37 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 #ZKSERVER=elephant
 #ZKPORT=2181
 
+##################################
+# Cloudera Quickstart VM  CDH4.3 #
+##################################
+#CDHV=4.3.0
+#EXJARS=hadoop-examples-2.0.0-mr1-cdh4.3.0.jar
+#USER=cloudera
+#ZKSERVER=127.0.0.1
+#ZKPORT=2181
 
-##########################
-# Cloudera Quickstart VM #
-##########################
-CDHV=4.3.0
-EXJARS=hadoop-examples-2.0.0-mr1-cdh4.3.0.jar
+#############################
+# Cloudera Quickstart VM C5 #
+#############################
+CDHV=5.0.0
 USER=cloudera
+HADOOP_MAPRED_HOME=/opt/cloudera/parcels/CDH/lib/hadoop-mapreduce
+EXJARS=hadoop-mapreduce-examples-2.2.0-cdh5.0.0-beta-2.jar
+GIRAPH_HOME=/usr/local/giraph
+JTADDRESS=127.0.0.1
 ZKSERVER=127.0.0.1
 ZKPORT=2181
 
+##########################################################
 #
 # Prepare the stage for some more analytics later on ...
 #
-sudo yum install ant
-sudo yum install gnuplot
-sudo yum install svn
-sudo yum install R
+#sudo yum install ant
+#sudo yum install gnuplot
+#sudo yum install svn
+#sudo yum install R
 
+##########################################################
 #
 # Install Maven3
 #
@@ -61,18 +74,19 @@ sudo yum install R
 #sudo ln -s apache-maven-3.1.1 maven
 
 #
-# Open with gedit ~/.bashrc file with and add the following lines to the end of the file,
+# Open with gedit:  ~/.bashrc and add the following lines to the end of the file:
 #
 #sudo echo "export M2_HOME=/usr/local/apache-maven-3.1.1" >> /home/$USER/.bashrc
 #sudo echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /home/$USER/.bashrc
 
 #
-# Execute the environment changes with the command,    
+# Execute the environment changes with the command, ... and test mvn
 #
 #source /home/$USER/.bashrc
 #sudo chmod 777 /usr/local/apache-maven-3.1.1/bin/mvn
 #sudo /usr/local/apache-maven-3.1.1/bin/mvn -version
 
+#####################################################################################
 #
 # Install GIT
 #
@@ -84,17 +98,20 @@ sudo yum install R
 #git config --global user.name "contrib"
 #git config --global user.email thats@me.com
 
+##################################################
 #
 # Test the MapReduce cluster …
 #
-hadoop fs -mkdir /user/$USER
-hadoop fs -mkdir /user/$USER/ginput
-hadoop fs -mkdir /user/$USER/goutput
-hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/teragen 50000 TESTFILE_$NOW
-hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/terasort TESTFILE_$NOW TESTFILE_$NOW.sorted
+#hadoop fs -mkdir /user/$USER
+#hadoop fs -mkdir /user/$USER/sort
+#hadoop fs -mkdir /user/$USER/ginput
+#hadoop fs -mkdir /user/$USER/goutput
+#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS teragen 50000 sort/TESTFILE_$NOW
+#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS terasort sort/TESTFILE_$NOW sort/TESTFILE_$NOW.sorted
 
+##################################################
 #
-# Deploy Giraph
+# Deploy Giraph 1.0.0
 #
 #wget https://github.com/apache/giraph/archive/release-1.0.0.zip
 #unzip release-1.0.0
@@ -103,18 +120,30 @@ hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/terasort TESTFILE_
 #ln -s giraph-core/target/giraph-1.0.0-for-hadoop-2.0.0-alpha-jar-with-dependencies.jar giraph-core.jar
 #ln -s giraph-examples/target/giraph-examples-1.0.0-for-hadoop-2.0.0-alpha-jar-with-dependencies.jar giraph-ex.jar
 
+##################################################
+#
+# Deploy Giraph 1.1.0
+#
+cd $GIRAPH_HOME
+#mvn package -DskipTests -Dhadoop=non_secure -Phadoop_2
+#ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
+#ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
+
+##################################################
 #
 # Download sample data
 #
 #mkdir gsampledata
 #cd gsampledata
 
+##################################################
 #
 #
 #
 #wget http://www-personal.umich.edu/~mejn/netdata/football.zip
 #unzip football.zip -d football
 
+##################################################
 #
 # Sample Network from A. Ching
 #
@@ -122,50 +151,58 @@ hadoop jar /usr/lib/hadoop-0.20-mapreduce/$EXJARS /user/$USER/terasort TESTFILE_
 #tar zxvf shortestPathsInputGraph.tar.gz
 #hadoop fs -put shortestPathsInputGraph /user/$USER/ginput/shortestPathsInputGraph
 
+##################################################
+#
+#
+#
 #wget https://github.com/kamir/giraphl/archive/master.zip
 #unzip master
-cd giraphl-master/sample_data/apache_giraph_examples
+#cd giraphl-master/sample_data/apache_giraph_examples
 
+##################################################
 #
 # Deploy sample data to HDFS
 #
 #hadoop fs -put tiny_graph.txt /user/$USER/ginput/tiny_graph.txt
-
-cd ..
-cd ..
-cd ..
-cd ..
-
+#
+#cd ..
+#cd ..
+#cd ..
+#cd ..
 #ls
-
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar -h
+#
+# Test the jar-file
+# (OK)
+hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar -h
 
 #
 # Run Giraph benchamrks
-#
-#hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
+# (OK)
+#hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=127.0.0.1:2181 -Dmapreduce.jobtracker.address=127.0.0.1 -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
 
 #
 # Show what algorithms can be used with a given InputFormat
 #
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.JsonBase64VertexOutputFormat -op /user/$USER/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=1 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+#######################################################
+# illustrates the problem of specialiyed InputFormats      !!!!! FAILS !!!!!
+#######################################################
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=127.0.0.1 -libjars giraph-core.jar org.apache.giraph.examples.SimpleShortestPathsComputation -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat -vof org.apache.giraph.io.formats.JsonBase64VertexOutputFormat -op /user/$USER/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=1 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
+
+
+#######################################################
+# RUN PAGERANK on tiny graph
+# (OK)
+#######################################################
+hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation -vip ginput/tiny_graph.txt -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -op /user/$USER/goutput/pagerank_$NOW -w 1 -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -mc org.apache.giraph.examples.SimplePageRankComputation\$SimplePageRankMasterCompute
+
+
+
+
 
 #hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleShortestPathsVertex -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/shortestpaths_$NOW -w 1
-
 #hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleOutDegreeCountVertex2 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/outdegree_$NOW -w 1
-
 #hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SimpleInDegreeCountVertex2 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /user/$USER/ginput/tiny_graph.txt -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/$USER/goutput/indegree_$NOW -w 1
 
-
-
-
-#
-# Build better LOGIC for a better EXAMPLE !!!
-#
-
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /user/cloudera/goutput/SSPV2_rand_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=3 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10000 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
-
-#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -libjars giraph-core.jar org.apache.giraph.examples.SSPV2 -vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat2 -eif org.apache.giraph.io.formats.PseudoRandomEdgeInputFormat2 -of org.apache.giraph.io.formats.AdjacencyListTextVertexOutputFormat -op /user/cloudera/goutput/randomGraph_$NOW -w 1 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=20 -ca giraph.pseudoRandomInputFormat.aggregateVertices=10000 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=2 -ca SimpleShortestPathsVertex.source=2
 
 
 
