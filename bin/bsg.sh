@@ -105,12 +105,12 @@ ZKPORT=2181
 #
 # Prepare a user directory and test the MapReduce cluster …
 #
-hadoop fs -mkdir /user/$USER
-hadoop fs -mkdir /user/$USER/sort
-hadoop fs -mkdir /user/$USER/ginput
-hadoop fs -mkdir /user/$USER/goutput
-hadoop jar $HADOOP_MAPRED_HOME/$EXJARS teragen 50000 sort/TESTFILE_$NOW
-hadoop jar $HADOOP_MAPRED_HOME/$EXJARS terasort sort/TESTFILE_$NOW sort/TESTFILE_$NOW.sorted
+#hadoop fs -mkdir /user/$USER
+#hadoop fs -mkdir /user/$USER/sort
+#hadoop fs -mkdir /user/$USER/ginput
+#hadoop fs -mkdir /user/$USER/goutput
+#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS teragen 50000 sort/TESTFILE_$NOW
+#hadoop jar $HADOOP_MAPRED_HOME/$EXJARS terasort sort/TESTFILE_$NOW sort/TESTFILE_$NOW.sorted
 
 ##################################################
 #
@@ -204,27 +204,27 @@ hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -libjars giraph-core.jar
 #
 # Run Giraph benchamrks
 # (OK)
-hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=127.0.0.1:2181 -Dmapreduce.jobtracker.address=127.0.0.1 -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
+hadoop jar giraph-ex.jar org.apache.giraph.benchmark.PageRankBenchmark -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar -e 1 -s 3 -v -V 50 -w 1
 
 #######################################################
 # RUN PAGERANK on tiny graph
 # (OK)
 #######################################################
-hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation -vip ginput/tiny_graph.txt -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -op /user/$USER/goutput/pagerank_tiny_$NOW -w 1 -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -mc org.apache.giraph.examples.SimplePageRankComputation\$SimplePageRankMasterCompute
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation -vip ginput/tiny_graph.txt -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -op /user/$USER/goutput/pagerank_tiny_$NOW -w 1 -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -mc org.apache.giraph.examples.SimplePageRankComputation\$SimplePageRankMasterCompute
 
 ########################################################################
 # RUN PAGERANK on generated graph  (WattsStrogaz generator InputFormat)
 # (OK)
 ########################################################################
-hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation2 -w 1 -mc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankMasterCompute2 -wc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankWorkerContext2 \
--vif org.apache.giraph.io.formats.WattsStrogatzVertexInputFormat -op /user/$USER/goutput/pagerank_watts_$NOW -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -ca wattsStrogatz.aggregateVertices=5000 -ca wattsStrogatz.edgesPerVertex=50 -ca wattsStrogatz.beta=0.5 -ca wattsStrogatz.seed=1
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation2 -w 1 -mc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankMasterCompute2 -wc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankWorkerContext2 \
+#-vif org.apache.giraph.io.formats.WattsStrogatzVertexInputFormat -op /user/$USER/goutput/pagerank_watts_$NOW -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -ca wattsStrogatz.aggregateVertices=5000 -ca wattsStrogatz.edgesPerVertex=50 -ca wattsStrogatz.beta=0.5 -ca wattsStrogatz.seed=1
 
 ########################################################################
 # RUN PAGERANK on generated graph  (PseudoRandom generator InputFormat)
 # (OK)
 ########################################################################
-hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation2 -w 2 -mc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankMasterCompute2 -wc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankWorkerContext2 \
--vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat -op /user/$USER/goutput/pagerank_pseudo_$NOW -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -ca giraph.pseudoRandomInputFormat.aggregateVertices=500 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=5 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=0.2
+#hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS -libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation2 -w 2 -mc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankMasterCompute2 -wc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankWorkerContext2 \
+#-vif org.apache.giraph.io.formats.PseudoRandomVertexInputFormat -op /user/$USER/goutput/pagerank_pseudo_$NOW -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -ca giraph.pseudoRandomInputFormat.aggregateVertices=500 -ca giraph.pseudoRandomInputFormat.edgesPerVertex=5 -ca giraph.pseudoRandomInputFormat.localEdgesMinRatio=0.2
 
 
 
