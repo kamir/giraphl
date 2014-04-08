@@ -124,10 +124,25 @@ ZKPORT=2181
 #
 # Deploy Giraph 1.1.0
 #
+GV=trunk
+PRO=hadoop_2
+
+#sudo mkdir /usr/local/giraph
 cd $GIRAPH_HOME
-#mvn package -DskipTests -Dhadoop=non_secure -Phadoop_2
-#ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
-#ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
+cd ..
+#sudo git clone https://github.com/apache/giraph.git
+#sudo chown -R cloudera:hadoop giraph
+cd $GIRAPH_HOME
+#git checkout $GV
+
+rm giraph-core.jar
+rm giraph-ex.jar
+
+#cp /home/cloudera/GIRAPH/giraphl/blog_02/src/*.java ./giraph-examples/src/main/java/org/apache/giraph/examples
+
+mvn clean compile package -DskipTests -Dhadoop=non_secure -P$PRO
+ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
+ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
 
 ##################################################
 #
