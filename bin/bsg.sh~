@@ -349,22 +349,16 @@ dot -Tps graphviz_pseudo_$NOW.dot -o graph_pseudo_$NOW.ps
 
 
 tinyGraphPageRank
-read
 
 tinyGraphPageRankGraphviz
-read
 
 wattsStrogatzGraphPageRank
-read
 
 wattsStrogatzGraphPageRankGraphviz
-read
 
 randomGraphPageRank
-read
 
 randomGraphPageRankGraphviz 
-
 
 
 

@@ -1,0 +1,19 @@
+digraph g {
+0:id -> 1:id [label=1.0 ];
+0:id -> 3:id [label=3.0 ];
+"0" [label="<id> 0|0.16682289373110673",shape=record,fillcolor="blue:orange"];
+2:id -> 1:id [label=2.0 ];
+2:id -> 4:id [label=4.0 ];
+"2" [label="<id> 2|0.17098446073203233",shape=record,fillcolor="blue:orange"];
+1:id -> 0:id [label=1.0 ];
+1:id -> 2:id [label=2.0 ];
+1:id -> 3:id [label=1.0 ];
+"1" [label="<id> 1|0.2417888079775044",shape=record,fillcolor="blue:orange"];
+3:id -> 0:id [label=3.0 ];
+3:id -> 1:id [label=1.0 ];
+3:id -> 4:id [label=4.0 ];
+"3" [label="<id> 3|0.24178880797750438",shape=record,fillcolor="blue:orange"];
+4:id -> 3:id [label=4.0 ];
+4:id -> 2:id [label=4.0 ];
+"4" [label="<id> 4|0.17098446073203233",shape=record,fillcolor="blue:orange"];
+}
