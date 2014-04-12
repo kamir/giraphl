@@ -34,7 +34,7 @@ NOW=$(date +"%Y-%m-%d_%H-%M-%S")
 # Cloudera Quickstart VM C5 #
 #############################
 CDHV=5.0.0
-USER=cloudera
+USER=kamir
 HADOOP_MAPRED_HOME=/opt/cloudera/parcels/CDH/lib/hadoop-mapreduce
 EXJARS=hadoop-mapreduce-examples-2.2.0-cdh5.0.0-beta-2.jar
 GIRAPH_HOME=/usr/local/giraph
@@ -125,24 +125,35 @@ ZKPORT=2181
 # Deploy Giraph 1.1.0
 #
 GV=trunk
-PRO=hadoop_2
+PRO=hadoop_1
+#PRO=hadoop_2
 
 #sudo mkdir /usr/local/giraph
 cd $GIRAPH_HOME
 cd ..
 #sudo git clone https://github.com/apache/giraph.git
-#sudo chown -R cloudera:hadoop giraph
+#sudo chown -R kamir:hadoop giraph
 cd $GIRAPH_HOME
+#sudo chmod 777 -R /usr/local/giraph
+
 #git checkout $GV
 
 #rm giraph-core.jar
 #rm giraph-ex.jar
 
-#cp /home/cloudera/GIRAPH/giraphl/blog_02/src/*.java ./giraph-examples/src/main/java/org/apache/giraph/examples
+#cp /home/kamir/giraphl/blog_02/src/*.java ./giraph-examples/src/main/java/org/apache/giraph/examples
 
-#mvn clean compile package -DskipTests -Dhadoop=non_secure -P$PRO
+mvn clean compile package -DskipTests -Dhadoop=non_secure -P$PRO
+
+ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-1.2.1-jar-with-dependencies.jar giraph-core.jar
+ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-1.2.1-jar-with-dependencies.jar giraph-ex.jar
+GEX=/usr/local/giraph/giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-1.2.1-jar-with-dependencies.jar
+GEC=/usr/local/giraph/giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-1.2.1-jar-with-dependencies.jar
+
 #ln -s giraph-core/target/giraph-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-core.jar
 #ln -s giraph-examples/target/giraph-examples-1.1.0-SNAPSHOT-for-hadoop-2.2.0-jar-with-dependencies.jar giraph-ex.jar
+#ls
+
 
 ##################################################
 #
@@ -178,6 +189,8 @@ cd $GIRAPH_HOME
 #
 # Deploy sample data to HDFS
 #
+#hadoop fs -mkdir /user/$USER/ginput
+#hadoop fs -mkdir /user/$USER/goutput
 #hadoop fs -put tiny_graph.txt /user/$USER/ginput/tiny_graph.txt
 #
 #cd ..
@@ -185,6 +198,10 @@ cd $GIRAPH_HOME
 #cd ..
 #cd ..
 #ls
+
+
+cd $GIRAPH_HOME
+
 
 #######################################################
 #
@@ -213,8 +230,8 @@ cd $GIRAPH_HOME
 #######################################################
 function wattsStrogatzGraphPageRankGraphviz()
 {
-hadoop jar giraph-ex.jar org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS \
--libjars giraph-core.jar org.apache.giraph.examples.SimplePageRankComputation2  \
+hadoop jar $GEX org.apache.giraph.GiraphRunner -Dgiraph.zkList=$ZKSERVER:$ZKPORT -Dmapreduce.jobtracker.address=$JTADDRESS \
+-libjars $GEC org.apache.giraph.examples.SimplePageRankComputation2  \
 -w 6 -mc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankMasterCompute2  \
 -wc org.apache.giraph.examples.SimplePageRankComputation2\$SimplePageRankWorkerContext2 \
 -vif org.apache.giraph.io.formats.WattsStrogatzVertexInputFormat  \
@@ -348,22 +365,22 @@ dot -Tps graphviz_pseudo_$NOW.dot -o graph_pseudo_$NOW.ps
 ########
 
 
-tinyGraphPageRank
-read
+#tinyGraphPageRank
+#read
 
-tinyGraphPageRankGraphviz
-read
+#tinyGraphPageRankGraphviz
+#read
 
-wattsStrogatzGraphPageRank
-read
+#wattsStrogatzGraphPageRank
+#read
 
 wattsStrogatzGraphPageRankGraphviz
-read
+#read
 
-randomGraphPageRank
-read
+#randomGraphPageRank
+#read
 
-randomGraphPageRankGraphviz 
+#randomGraphPageRankGraphviz 
 
 
 
