@@ -95,7 +95,7 @@ public class SimplePageRankComputation2 extends BasicComputation<LongWritable,
   /**
    * Worker context used with {@link SimplePageRankComputation2}.
    */
-  public static class SimplePageRankWorkerContext extends
+  public static class SimplePageRankWorkerContext2 extends
       WorkerContext {
     /** Final max value for verification for local jobs */
     private static double FINAL_MAX;
@@ -159,7 +159,7 @@ public class SimplePageRankComputation2 extends BasicComputation<LongWritable,
    * Master compute associated with {@link SimplePageRankComputation2}.
    * It registers required aggregators.
    */
-  public static class SimplePageRankMasterCompute extends
+  public static class SimplePageRankMasterCompute2 extends
       DefaultMasterCompute {
     @Override
     public void initialize() throws InstantiationException,
